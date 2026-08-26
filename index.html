@@ -1066,6 +1066,84 @@ body[data-layout-footer="b"] .foot-base span:last-child{ text-align:right; }
   .audio-btn{ width:42px; height:42px; right:12px; bottom:12px; }
   .audio-btn .ico{ width:18px; height:18px; }
 }
+
+/* — developer / credits (between Thank You and footer) */
+.dev{
+  /* section uses .sec padding via base style; no extra top pad needed */
+}
+.dev-list{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:18px; max-width:980px; margin:48px auto 0; padding:0 6vw;
+}
+.dev-item{
+  position:relative; overflow:hidden;
+  padding:24px 26px;
+  border:1px solid rgba(223,231,224,.14);
+  background:linear-gradient(180deg,rgba(10,14,18,.55),rgba(10,14,18,.25));
+  border-radius:4px;
+  display:flex; align-items:center; gap:18px;
+  color:var(--bone); text-decoration:none;
+  transition:background .35s var(--ease), border-color .35s, transform .25s var(--ease-out);
+}
+.dev-item::before{
+  content:""; position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg,transparent,rgba(232,160,80,.7),transparent);
+  opacity:.6; transition:opacity .35s;
+}
+.dev-item:hover{
+  background:linear-gradient(180deg,rgba(20,16,22,.7),rgba(20,16,22,.4));
+  border-color:rgba(232,160,80,.45); transform:translateY(-2px);
+}
+.dev-item:hover::before{ opacity:1; }
+.dev-icon{
+  flex:0 0 auto; width:46px; height:46px;
+  display:grid; place-items:center;
+  border:1px solid rgba(223,231,224,.18);
+  border-radius:50%; color:var(--bone);
+  background:rgba(0,0,0,.2);
+  transition:border-color .35s, color .35s;
+}
+.dev-item:hover .dev-icon{ border-color:rgba(232,160,80,.7); color:#e8a050; }
+.dev-icon svg{ width:22px; height:22px; display:block; }
+.dev-body{ flex:1 1 auto; min-width:0; }
+.dev-eyebrow{
+  font-size:10px; letter-spacing:.32em; text-transform:uppercase;
+  color:var(--muted); margin-bottom:6px;
+}
+.dev-title{
+  font-family:'Display','Onest',serif; font-weight:400;
+  font-size:clamp(16px,1.6vw,20px); line-height:1.2;
+  color:var(--bone); margin-bottom:4px;
+}
+.dev-sub{
+  font-size:12px; color:rgba(223,231,224,.6);
+  font-variant-numeric:tabular-nums; letter-spacing:.02em;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.dev-go{
+  flex:0 0 auto; width:34px; height:34px;
+  display:grid; place-items:center;
+  border:1px solid rgba(223,231,224,.18); border-radius:50%;
+  color:rgba(223,231,224,.5);
+  transition:transform .35s var(--ease-out), border-color .35s, color .35s;
+}
+.dev-item:hover .dev-go{
+  transform:translate3d(3px,-3px,0);
+  border-color:rgba(232,160,80,.7); color:#e8a050;
+}
+.dev-go svg{ width:13px; height:13px; display:block; }
+.dev-note{
+  margin:46px auto 0; padding:0 6vw; max-width:780px;
+  text-align:center; font-size:11px; letter-spacing:.28em; text-transform:uppercase;
+  color:rgba(223,231,224,.5);
+}
+@media (max-width:720px){
+  .dev-list{ padding:0 5vw; }
+  .dev-item{ padding:18px 18px; gap:14px; }
+  .dev-icon{ width:40px; height:40px; }
+  .dev-icon svg{ width:18px; height:18px; }
+  .dev-sub{ font-size:11px; }
+}
 </style>
 </head>
 <body data-layout-hero="b" data-layout-story="b" data-layout-gallery="b"
@@ -1085,10 +1163,10 @@ body[data-layout-footer="b"] .foot-base span:last-child{ text-align:right; }
         <path d="M6 12h32M9.5 17h25M22 8v28" stroke="#dfe7e0" stroke-width="1.2"/>
       </svg>
     </div>
-    <div class="pre-jp jp">影の道</div>
+    <div class="pre-jp jp">結</div>
     <div class="pre-bar"><i id="pre-fill"></i></div>
     <div class="pre-meta">
-      <span>Raising the mountain temple</span><b><span id="pre-pct">0</span>%</b>
+      <span>Menyiapkan hari istimewa Anda</span><b><span id="pre-pct">0</span>%</b>
     </div>
   </div>
 </div>
@@ -1305,6 +1383,76 @@ body[data-layout-footer="b"] .foot-base span:last-child{ text-align:right; }
     <i></i><span>Kembali ke atas</span>
     <svg viewBox="0 0 14 14" fill="none" width="13" height="13"><path d="M3 11 11 3M5 3h6v6" stroke="#dfe7e0" stroke-width="1.3"/></svg>
   </a>
+</section>
+
+<!-- ============================================================ developer -->
+<section class="sec dev" id="developer" data-cam="4">
+  <div class="sec-head" data-rv="fade">
+    <span class="k"><b>04</b> &mdash; Credits</span><span class="rule"></span><span class="k jp">開発者</span>
+  </div>
+  <div class="cur-head">
+    <h2 class="display h-sec" data-rv="up">Informasi Developer.</h2>
+    <p class="body-lg" data-rv="up">Template ini dirancang dan dikembangkan oleh Yogi Prasetya Sadewa.
+      Tertarik membuat undangan digital serupa untuk hari istimewa Anda? Hubungi saya lewat kanal di bawah.</p>
+  </div>
+
+  <div class="dev-list">
+    <a class="dev-item" data-rv="up" href="https://wa.me/6281260312799" target="_blank" rel="noopener" data-cursor>
+      <div class="dev-icon" aria-hidden="true">
+        <svg viewBox="0 0 32 32" fill="none">
+          <path d="M16 3C8.82 3 3 8.82 3 16c0 2.3.6 4.5 1.7 6.4L3 29l6.8-1.7C11.6 28.4 13.8 29 16 29c7.18 0 13-5.82 13-13S23.18 3 16 3z" stroke="currentColor" stroke-width="1.4" fill="none"/>
+          <path d="M11.5 12.2c-.3-.7-.6-.7-.9-.7h-.7c-.3 0-.7.1-1 .5s-1.3 1.3-1.3 3.1 1.3 3.6 1.5 3.8c.2.3 2.6 4 6.3 5.6.9.4 1.5.6 2.1.8.9.3 1.6.2 2.3.1.7-.1 2.1-.9 2.4-1.7.3-.8.3-1.5.2-1.7-.1-.1-.4-.3-.8-.5s-2.1-1-2.4-1.2c-.3-.1-.6-.1-.8.1-.3.3-1 1.2-1.2 1.4-.2.2-.5.3-.9.1-.4-.1-1.5-.6-2.9-1.7-1.1-.9-1.8-2.1-2-2.5-.2-.3 0-.5.1-.7.1-.1.3-.3.4-.5.1-.1.2-.3.3-.4.1-.1.1-.3 0-.4-.1-.1-.7-1.6-.9-2.2z" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="dev-body">
+        <div class="dev-eyebrow">WhatsApp &middot; 優先</div>
+        <div class="dev-title">Chat langsung</div>
+        <div class="dev-sub">Respon paling cepat &middot; 08.126.0312.799</div>
+      </div>
+      <span class="dev-go" aria-hidden="true">
+        <svg viewBox="0 0 14 14" fill="none"><path d="M3 11 11 3M5 3h6v6" stroke="currentColor" stroke-width="1.3"/></svg>
+      </span>
+    </a>
+
+    <a class="dev-item" data-rv="up" href="mailto:yogiprasetya907@gmail.com" data-cursor>
+      <div class="dev-icon" aria-hidden="true">
+        <svg viewBox="0 0 32 32" fill="none">
+          <rect x="3.5" y="7" width="25" height="18" rx="1.5" stroke="currentColor" stroke-width="1.4" fill="none"/>
+          <path d="M4 8l12 9 12-9" stroke="currentColor" stroke-width="1.4" fill="none"/>
+        </svg>
+      </div>
+      <div class="dev-body">
+        <div class="dev-eyebrow">Email &middot; 郵便</div>
+        <div class="dev-title">Kirim brief &amp; pertanyaan</div>
+        <div class="dev-sub">yogiprasetya907@gmail.com</div>
+      </div>
+      <span class="dev-go" aria-hidden="true">
+        <svg viewBox="0 0 14 14" fill="none"><path d="M3 11 11 3M5 3h6v6" stroke="currentColor" stroke-width="1.3"/></svg>
+      </span>
+    </a>
+
+    <a class="dev-item" data-rv="up" href="https://www.instagram.com/gik_prasetya?igsh=MXg2NHkzYzBxaTZjYg==" target="_blank" rel="noopener" data-cursor>
+      <div class="dev-icon" aria-hidden="true">
+        <svg viewBox="0 0 32 32" fill="none">
+          <rect x="4" y="4" width="24" height="24" rx="6" stroke="currentColor" stroke-width="1.4" fill="none"/>
+          <circle cx="16" cy="16" r="5.5" stroke="currentColor" stroke-width="1.4" fill="none"/>
+          <circle cx="22.5" cy="9.5" r="1.2" fill="currentColor"/>
+        </svg>
+      </div>
+      <div class="dev-body">
+        <div class="dev-eyebrow">Instagram &middot; 写真</div>
+        <div class="dev-title">Lihat portofolio</div>
+        <div class="dev-sub">@gik_prasetya &middot; klik untuk follow</div>
+      </div>
+      <span class="dev-go" aria-hidden="true">
+        <svg viewBox="0 0 14 14" fill="none"><path d="M3 11 11 3M5 3h6v6" stroke="currentColor" stroke-width="1.3"/></svg>
+      </span>
+    </a>
+  </div>
+
+  <p class="dev-note" data-rv="fade">
+    Pesan template kustom &middot; harga fleksibel &middot; garansi revisi sampai puas.
+  </p>
 </section>
 
 <!-- ============================================================ footer -->
