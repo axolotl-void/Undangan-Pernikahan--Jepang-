@@ -996,3 +996,43 @@ body[data-layout-footer="b"] .foot-base span:last-child{ text-align:right; }
 }
 
 /* the couple moved into the 3D scene — see buildCouple() in index.html */
+
+/* — audio toggle (fixed, glassmorphism) */
+.audio-btn{
+  position:fixed; right:clamp(14px,2vw,22px); bottom:clamp(14px,2vw,22px); z-index:60;
+  width:46px; height:46px; display:grid; place-items:center;
+  background:rgba(5,7,10,.55); color:var(--bone);
+  border:1px solid var(--line-soft); border-radius:50%;
+  backdrop-filter:blur(14px) saturate(1.1); -webkit-backdrop-filter:blur(14px) saturate(1.1);
+  cursor:pointer; padding:0;
+  transition:background .35s var(--ease), border-color .35s, transform .25s;
+  box-shadow:0 6px 24px rgba(0,0,0,.4);
+}
+.audio-btn:hover{ background:rgba(20,14,18,.7); border-color:rgba(223,231,224,.34); transform:scale(1.04); }
+.audio-btn:focus-visible{ outline:1px solid var(--bone); outline-offset:3px; }
+.audio-btn .ico{ width:20px; height:20px; display:block; transition:opacity .25s, transform .25s; }
+.audio-btn .ico-on{  display:none; }
+.audio-btn .ico-off{ display:block; }
+.audio-btn[data-muted="true"] .ico-on{  display:none; }
+.audio-btn[data-muted="true"] .ico-off{ display:block; }
+.audio-btn[data-muted="false"] .ico-on{  display:block; }
+.audio-btn[data-muted="false"] .ico-off{ display:none; }
+/* gentle pulse on the on-state to signal sound is live */
+.audio-btn[data-muted="false"]{ animation:audio-pulse 2.4s var(--ease-io) infinite; border-color:rgba(255,210,150,.5); }
+.audio-btn[data-muted="false"] .ico-on{ animation:ico-bob 2.4s var(--ease-io) infinite; }
+@keyframes audio-pulse{
+  0%,100%{ box-shadow:0 6px 24px rgba(0,0,0,.4), 0 0 0 0 rgba(255,210,150,.4); }
+  50%{     box-shadow:0 6px 24px rgba(0,0,0,.4), 0 0 0 6px rgba(255,210,150,0); }
+}
+@keyframes ico-bob{
+  0%,100%{ transform:scale(1); }
+  50%{     transform:scale(1.08); }
+}
+@media (prefers-reduced-motion:reduce){
+  .audio-btn[data-muted="false"]{ animation:none; }
+  .audio-btn[data-muted="false"] .ico-on{ animation:none; }
+}
+@media (max-width:720px){
+  .audio-btn{ width:42px; height:42px; right:12px; bottom:12px; }
+  .audio-btn .ico{ width:18px; height:18px; }
+}

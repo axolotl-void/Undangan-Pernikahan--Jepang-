@@ -1027,6 +1027,45 @@ body[data-layout-footer="b"] .foot-base span:last-child{ text-align:right; }
 @media (prefers-reduced-motion:reduce){
   .hero-fg{ animation:none; opacity:1; transform:translateX(-50%); }
 }
+
+/* — audio toggle (fixed, glassmorphism) */
+.audio-btn{
+  position:fixed; right:clamp(14px,2vw,22px); bottom:clamp(14px,2vw,22px); z-index:60;
+  width:46px; height:46px; display:grid; place-items:center;
+  background:rgba(5,7,10,.55); color:var(--bone);
+  border:1px solid var(--line-soft); border-radius:50%;
+  backdrop-filter:blur(14px) saturate(1.1); -webkit-backdrop-filter:blur(14px) saturate(1.1);
+  cursor:pointer; padding:0;
+  transition:background .35s var(--ease), border-color .35s, transform .25s;
+  box-shadow:0 6px 24px rgba(0,0,0,.4);
+}
+.audio-btn:hover{ background:rgba(20,14,18,.7); border-color:rgba(223,231,224,.34); transform:scale(1.04); }
+.audio-btn:focus-visible{ outline:1px solid var(--bone); outline-offset:3px; }
+.audio-btn .ico{ width:20px; height:20px; display:block; transition:opacity .25s, transform .25s; }
+.audio-btn .ico-on{  display:none; }
+.audio-btn .ico-off{ display:block; }
+.audio-btn[data-muted="true"] .ico-on{  display:none; }
+.audio-btn[data-muted="true"] .ico-off{ display:block; }
+.audio-btn[data-muted="false"] .ico-on{  display:block; }
+.audio-btn[data-muted="false"] .ico-off{ display:none; }
+.audio-btn[data-muted="false"]{ animation:audio-pulse 2.4s var(--ease-io) infinite; border-color:rgba(255,210,150,.5); }
+.audio-btn[data-muted="false"] .ico-on{ animation:ico-bob 2.4s var(--ease-io) infinite; }
+@keyframes audio-pulse{
+  0%,100%{ box-shadow:0 6px 24px rgba(0,0,0,.4), 0 0 0 0 rgba(255,210,150,.4); }
+  50%{     box-shadow:0 6px 24px rgba(0,0,0,.4), 0 0 0 6px rgba(255,210,150,0); }
+}
+@keyframes ico-bob{
+  0%,100%{ transform:scale(1); }
+  50%{     transform:scale(1.08); }
+}
+@media (prefers-reduced-motion:reduce){
+  .audio-btn[data-muted="false"]{ animation:none; }
+  .audio-btn[data-muted="false"] .ico-on{ animation:none; }
+}
+@media (max-width:720px){
+  .audio-btn{ width:42px; height:42px; right:12px; bottom:12px; }
+  .audio-btn .ico{ width:18px; height:18px; }
+}
 </style>
 </head>
 <body data-layout-hero="b" data-layout-story="b" data-layout-gallery="b"
@@ -1324,7 +1363,106 @@ body[data-layout-footer="b"] .foot-base span:last-child{ text-align:right; }
 
 <div class="rail" id="rail"></div>
 
+<!-- Background music: starts muted so the browser allows autoplay; the first
+     user gesture (click, scroll, keypress, touch) unmutes it. The button in
+     .audio-btn is the manual override. -->
+<audio id="bgm" src="secret-pathways-assets/sound.mp3" autoplay loop preload="auto" muted playsinline></audio>
+
+<button class="audio-btn" id="audioBtn" type="button" aria-label="Toggle music" data-muted="true">
+  <svg class="ico ico-on"  viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/>
+    <path d="M16 8.5a4 4 0 0 1 0 7M18.5 5.5a8 8 0 0 1 0 13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+  </svg>
+  <svg class="ico ico-off" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/>
+    <path d="M16 9l5 5M21 9l-5 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+  </svg>
+</button>
+
 <script src="secret-pathways-assets/three.min.js"></script>
+
+<script>
+/* =====================================================================
+   Background music — autoplay muted, unmute on first user gesture.
+   Browser autoplay policy blocks any sound before interaction, so the
+   audio is started muted (which the policy permits) and unmuted the
+   first time the visitor moves the page in any way. After that the
+   button is the manual override; the choice persists in localStorage.
+   ===================================================================== */
+(function () {
+  'use strict';
+  var audio = document.getElementById('bgm');
+  var btn   = document.getElementById('audioBtn');
+  if (!audio || !btn) return;
+
+  var KEY = 'wedding-audio-muted';
+  var pending = true;
+  function refreshIcon() {
+    btn.setAttribute('data-muted', audio.muted ? 'true' : 'false');
+    btn.setAttribute('aria-pressed', audio.muted ? 'false' : 'true');
+    btn.setAttribute('title', audio.muted ? 'Hidupkan musik' : 'Matikan musik');
+  }
+  function safePlay() {
+    try {
+      var p = audio.play();
+      if (p && typeof p.catch === 'function') p.catch(function () { /* noop */ });
+    } catch (err) { /* autoplay rejected, will retry on first user gesture */ }
+  }
+  function unmute() {
+    if (!pending) return;
+    pending = false;
+    audio.muted = false;
+    audio.volume = 0.85;
+    safePlay();
+    try { localStorage.setItem(KEY, '0'); } catch (e) {}
+    refreshIcon();
+    removeListeners();
+    console.info('[audio] unmuted by first user gesture');
+  }
+  function onToggle(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (audio.paused) safePlay();
+    audio.muted = !audio.muted;
+    try { localStorage.setItem(KEY, audio.muted ? '1' : '0'); } catch (e) {}
+    if (!audio.muted) pending = false;
+    refreshIcon();
+  }
+  function removeListeners() {
+    document.removeEventListener('pointerdown', unmute, true);
+    document.removeEventListener('keydown',      unmute, true);
+    document.removeEventListener('touchstart',  unmute, true);
+    document.removeEventListener('wheel',       unmute, true);
+    document.removeEventListener('scroll',      unmute, true);
+  }
+  function addListeners() {
+    document.addEventListener('pointerdown', unmute, true);
+    document.addEventListener('keydown',      unmute, true);
+    document.addEventListener('touchstart',  unmute, true);
+    document.addEventListener('wheel',       unmute, true);
+    document.addEventListener('scroll',      unmute, true);
+  }
+
+  // Restore previous preference if any (mute is a deliberate choice, not a default).
+  try {
+    var saved = localStorage.getItem(KEY);
+    if (saved === '1') { audio.muted = true; pending = false; }
+  } catch (e) {}
+
+  btn.addEventListener('click', onToggle, false);
+  addListeners();
+  refreshIcon();
+
+  // Start muted immediately so the autoplay promise resolves without a gesture.
+  audio.addEventListener('play',  function () { console.info('[audio] playing, muted=' + audio.muted); });
+  audio.addEventListener('pause', function () { console.info('[audio] paused'); });
+  audio.addEventListener('error', function (e) { console.warn('[audio] error', e); });
+  audio.addEventListener('canplay', function () { console.info('[audio] canplay, readyState=' + audio.readyState); });
+  safePlay();
+  console.info('[audio] init — muted=' + audio.muted + ', paused=' + audio.paused);
+})();
+</script>
+
 <script>
 /* =====================================================================
    KAGE — a live Kyoto mountain temple, after dark.
